@@ -1,17 +1,15 @@
-﻿using Abp.Domain.Entities;
-using Abp.Domain.Entities.Auditing;
+﻿using Abp.Application.Services.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseTracker.Entities
+namespace CourseTracker.Learners_.Dtos
 {
-    public class Learner: FullAuditedEntity<int>
+    public class LearnerDto: EntityDto<int>
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public ICollection<Enrollment> Enrollments { get; set; }
     }
 }

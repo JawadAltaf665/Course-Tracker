@@ -12,7 +12,13 @@ namespace CourseTracker.Authorization
         {
             LocalizationSourceName = CourseTrackerConsts.LocalizationSourceName;
         }
-
+        /// <summary>
+        /// // Creates an exception for a failed login attempt based on the result type, username or email address, and tenancy name.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="usernameOrEmailAddress"></param>
+        /// <param name="tenancyName"></param>
+        /// <returns></returns>
         public Exception CreateExceptionForFailedLoginAttempt(AbpLoginResultType result, string usernameOrEmailAddress, string tenancyName)
         {
             switch (result)

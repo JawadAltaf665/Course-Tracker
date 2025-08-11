@@ -14,4 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CourseTracker.Core\CourseTracker.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Enrollments\" />
+  </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@ namespace CourseTracker.Authorization.Accounts
             _userRegistrationManager = userRegistrationManager;
         }
 
+
         public async Task<IsTenantAvailableOutput> IsTenantAvailable(IsTenantAvailableInput input)
         {
             var tenant = await TenantManager.FindByTenancyNameAsync(input.TenancyName);

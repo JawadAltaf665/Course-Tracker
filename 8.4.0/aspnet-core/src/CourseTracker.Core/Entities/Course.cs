@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CourseTracker.Entities
 {
-    public class Course: FullAuditedAggregateRoot<int>
+    public class Course: FullAuditedEntity<int>
     {
         public string Title { get; set; }
         public string Description { get; set; }
