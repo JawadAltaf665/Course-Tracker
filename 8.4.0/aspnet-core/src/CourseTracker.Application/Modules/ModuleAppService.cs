@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CourseTracker.Authorization.CourseTrackerAuthorizationProvider;
 
 namespace CourseTracker.Modules
 {
@@ -25,7 +26,7 @@ namespace CourseTracker.Modules
             _mapper = mapper;
         }
 
-
+        [AbpAuthorize(ModulePermissions.Modules_Create)]
         public async Task CreateModuleAsync(CreateUpdateModuleDTO input)
         {
             var module = new Module
@@ -39,6 +40,7 @@ namespace CourseTracker.Modules
             await _moduleRepository.InsertAsync(module);
         }
 
+        [AbpAuthorize(ModulePermissions.Modules_Delete)]
         public async Task DeleteModuleAsync(int id)
         {
             var selectedModule = await _moduleRepository.FirstOrDefaultAsync(id);
@@ -71,6 +73,7 @@ namespace CourseTracker.Modules
             return moduleDto;
         }
 
+        [AbpAuthorize(ModulePermissions.Modules_Update)]
         public async Task UpdateModuleAsync(CreateUpdateModuleDTO input)
         {
             var module = await _moduleRepository.FirstOrDefaultAsync(input.Id);

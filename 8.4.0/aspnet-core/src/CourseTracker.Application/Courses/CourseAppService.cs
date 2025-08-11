@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper;
@@ -12,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CourseTracker.Authorization.CourseTrackerAuthorizationProvider;
 
 namespace CourseTracker.AppService
 {
@@ -28,6 +30,7 @@ namespace CourseTracker.AppService
 
         }
 
+        [AbpAuthorize(CoursePermissions.Courses_Create)]
         public async Task CreateCourseAsync(CreateUpdateCourseDTO input)
         {
             if(string.IsNullOrWhiteSpace(input.Title))
@@ -35,17 +38,19 @@ namespace CourseTracker.AppService
                 throw new UserFriendlyException("Course title cannot be empty.");
             }
 
-            var course = new CourseTracker.Entities.Course
+            var course = new Entities.Course
             {
                 Title = input.Title,
                 Description = input.Description
             };
+
             _mapper.Map<CourseTracker.Entities.Course>(course);
 
             await _courseRepo.InsertAsync(course);
 
         }
 
+        [AbpAuthorize(CoursePermissions.Courses_Delete)]
         public async Task DeleteCourseAsync(int id)
         {
             var selectedCourse = await _courseRepo.FirstOrDefaultAsync(id);
@@ -95,7 +100,7 @@ namespace CourseTracker.AppService
             return allCourses;
         }
 
-
+        [AbpAuthorize(CoursePermissions.Courses_Update)]
         public async Task UpdateCourseAsync(CreateUpdateCourseDTO input)
         {
             var selectedCourse = await _courseRepo.FirstOrDefaultAsync(input.Id);

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CourseTracker.Courses.Dtos;
+using CourseTracker.Enrollments.Dtos;
 using CourseTracker.Entities;
 using CourseTracker.Learners_.Dtos;
 using CourseTracker.Modules.Dtos;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CourseTracker.AutoMapper
 {
-    public class AutoMapperProfile: Profile
+    public class AutoMapperProfile : Profile
     {
         public AutoMapperProfile()
         {
@@ -30,11 +31,14 @@ namespace CourseTracker.AutoMapper
             CreateMap<CreateUpdateModuleDTO, Module>();
 
             // Enrollment
-            // CreateMap<EnrollmentDTO, Enrollment>();
-            // CreateMap<CreateUpdateEnrollmentDTO, Enrollment>();
+            CreateMap<Enrollment, EnrollmentDTO>()
+                .ForMember(dest => dest.LearnerName, opt => opt.MapFrom(src => src.Learner.Name)) 
+                .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title));    
+            CreateMap<CreateUpdateEnrollmentDTO, Enrollment>();
+
 
         }
 
-       
+
     }
 }

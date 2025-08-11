@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CourseTracker.Authorization.CourseTrackerAuthorizationProvider;
 
 namespace CourseTracker.Learners_
 {
@@ -22,6 +24,7 @@ namespace CourseTracker.Learners_
             _mapper = mapper;
         }
 
+        [AbpAuthorize(LearnerPermissions.Learners_Create)]
         public async Task CreateLearnerAsync(CreateUpdateLearnerDTO input)
         {
             var learner = new Learner
@@ -38,6 +41,7 @@ namespace CourseTracker.Learners_
            
         }
 
+        [AbpAuthorize(LearnerPermissions.Learners_Delete)]
         public async Task DeleteLearnerAsync(int id)
         {
             var selectedLearner = await _learnerRepo.FirstOrDefaultAsync(id);
@@ -77,6 +81,7 @@ namespace CourseTracker.Learners_
         /// <exception cref="UserFriendlyException">
         /// Thrown when the learner with the specified ID is not found in the database.
         /// </exception>
+        [AbpAuthorize(LearnerPermissions.Learners_Update)]
         public async Task UpdateLearnerAsync(CreateUpdateLearnerDTO input)
         {
             var learner = await _learnerRepo.FirstOrDefaultAsync(input.Id);
