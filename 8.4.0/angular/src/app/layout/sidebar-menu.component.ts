@@ -52,6 +52,34 @@ export class SidebarMenuComponent extends AppComponentBase implements OnInit {
                 'Pages.Roles'
             ),
             new MenuItem(
+                this.l('Courses'),
+                '/app/course-list',
+                'fas fa-book',
+                'Pages.Courses'
+            ),
+
+            new MenuItem(
+                this.l('Modules'),
+                '/app/modules',
+                'fas fa-puzzle-piece', // 📦
+                'Pages.Modules'
+            ),
+
+            new MenuItem(
+                this.l('Learners'),
+                '/app/learners',
+                'fas fa-user-graduate', // 🎓
+                'Pages.Learners'
+            ),
+
+            new MenuItem(
+                this.l('Enrollments'),
+                '/app/enrollments',
+                'fas fa-clipboard-list', // 📝
+                'Pages.Enrollments'
+            ),
+
+            new MenuItem(
                 this.l('Tenants'),
                 '/app/tenants',
                 'fas fa-building',

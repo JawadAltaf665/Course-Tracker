@@ -1,12 +1,14 @@
 ﻿using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Domain.Uow;
 using Abp.UI;
 using AutoMapper;
 using CourseTracker.Course;
 using CourseTracker.Courses;
 using CourseTracker.Courses.Dtos;
 using CourseTracker.Entities;
+using CourseTracker.Modules.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,14 +22,18 @@ namespace CourseTracker.AppService
     public class CourseAppService: ApplicationService, ICourseAppService
     {
         private readonly IRepository<CourseTracker.Entities.Course, int> _courseRepo;
+        private readonly IRepository<Module, int> _moduleRepo;
         private readonly IMapper _mapper; 
 
 
-        public CourseAppService(IRepository<CourseTracker.Entities.Course, int> courseRepo, IMapper mapper)
+        public CourseAppService(
+            IRepository<Entities.Course, int> courseRepo,
+            IMapper mapper,
+            IRepository<Module, int> moduleRepo)
         {
             _courseRepo = courseRepo;
             _mapper = mapper;
-
+            _moduleRepo = moduleRepo;
         }
 
         [AbpAuthorize(CoursePermissions.Courses_Create)]
@@ -115,9 +121,38 @@ namespace CourseTracker.AppService
 
         }
 
-        public Task<List<CourseDTO>> GetCoursesByKeyword(string keyword)
+        [UnitOfWork]
+        public async Task CreateCourseWIthModuleDTO(CreateCourseWithModulesRequest input)
         {
-            throw new NotImplementedException();
+            var course = _mapper.Map<Entities.Course>(input.Course);
+            await _courseRepo.InsertAsync(course);
+            var courseId = await _courseRepo.InsertAndGetIdAsync(course);
+
+            foreach (var moduleDto in input.Modules)
+            {
+                var module = _mapper.Map<Entities.Module>(moduleDto);
+                module.CourseId = course.Id;
+                await _moduleRepo.InsertAsync(module);
+            }
+        }
+        public async Task<List<CourseDTO>> GetCoursesByKeyword(string keyword)
+        {
+            var course = await _courseRepo.GetAll()
+                .Where(c => c.Title.Contains(keyword) || c.Description.Contains(keyword))
+                .Select(c => new CourseDTO
+                {
+                    Title = c.Title,
+                    Description = c.Description,
+                    Id = c.Id
+                }).ToListAsync();
+
+            if (!course.Any())
+            {
+                throw new UserFriendlyException($"No courses found with keyword '{keyword}'.");
+            }
+
+            return _mapper.Map<List<CourseDTO>>(course);
+            
         }
     }
 }

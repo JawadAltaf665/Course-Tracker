@@ -6,8 +6,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="node_modules\**" />
+    <Compile Remove="src\app\NewFolder\**" />
     <EmbeddedResource Remove="node_modules\**" />
+    <EmbeddedResource Remove="src\app\NewFolder\**" />
     <None Remove="node_modules\**" />
+    <None Remove="src\app\NewFolder\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="dist" />

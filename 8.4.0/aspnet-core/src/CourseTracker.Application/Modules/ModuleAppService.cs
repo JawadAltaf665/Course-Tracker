@@ -32,6 +32,7 @@ namespace CourseTracker.Modules
             var module = new Module
             {
                 Title = input.Title,
+                Description = input.Description,
                 CourseId = input.CourseId
             };
 
@@ -82,13 +83,14 @@ namespace CourseTracker.Modules
                 throw new UserFriendlyException($"Module with ID {input.Id} not found.");
             }
             module.Title = input.Title;
+            module.Description = input.Description;
             module.CourseId = input.CourseId;
 
             _mapper.Map<ModuleDTO>(module);
 
              await _moduleRepository.UpdateAsync(module);
         }
-        [AbpAuthorize]
+
         public async Task<List<ModuleDTO>> FilterModuleByCourseId(int courseId)
         {
             var modules = await _moduleRepository.GetAll()

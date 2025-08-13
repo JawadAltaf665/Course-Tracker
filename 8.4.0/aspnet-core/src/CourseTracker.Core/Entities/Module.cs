@@ -12,6 +12,7 @@ namespace CourseTracker.Entities
     public class Module: FullAuditedEntity<int>
     {
         public string Title { get; set; }
+        public string Description { get; set; }
         public int CourseId { get; set; }
 
         [ForeignKey("CourseId")]
