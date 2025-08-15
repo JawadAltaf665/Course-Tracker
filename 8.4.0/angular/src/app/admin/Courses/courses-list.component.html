@@ -1,0 +1,168 @@
+<div class="container mt-4">
+
+    <abp-modal-header class="bg-light" [title]="'Create Course' | localize">
+    </abp-modal-header>
+    <!--<div class="card mb-4">
+        <div class="card-header bg-primary btn-sm d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Create Course</h5>-->
+    <!--<button class="btn btn-success btn-sm">+ Create Course</button>-->
+    <!--</div>-->
+    <div class="card-body">
+        <form [formGroup]="courseListForm">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <input type="hidden" class="form-control" formControlName="id">
+
+                    <label class="form-label">
+                        {{ "Course Title" | localize }}
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter course title" formControlName="title">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">
+                        {{ "Description" | localize }}
+                    </label>
+                    <input type="text" class="form-control" placeholder="Enter description" formControlName="description">
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-sm btn-secondary" (click)="Reset()">
+                    {{ "Reset" | localize }}
+                </button>
+
+                <button type="button" class="btn btn-sm btn-primary" (click)="Save()">
+                    {{ "Save" | localize }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Courses List</h5>
+        </div>
+        <div class="input-group mb-3">
+            <input type="text" [(ngModel)]="searchKeyword" placeholder="Search Courses..." class="form-control">
+            <button class="btn btn-primary" (click)="onSearch(searchKeyword)">Search</button>
+        </div>
+
+        <!-- Table -->
+        <table class="table table-striped" *ngIf="(filteredCourses.length > 0) || (courses.length > 0)">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Course Title</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="filteredCourses.length > 0; else fullList">
+                <tr *ngFor="let course of filteredCourses; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ course.title }}</td>
+                    <td>{{ course.description }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-secondary" (click)="EditCourse(course)">
+                            <i class="fas fa-edit"></i>{{ "Edit" | localize }}
+                        </button>
+
+                        <button class="btn btn-primary btn-sm" (click)="DeleteCourse(course)">
+                            <i class="fas fa-trash"></i>{{ "Delete" | localize }}
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- No records found template -->
+        <!--<ng-template #noRecordFound>
+            <tbody>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        {{ "No records found" | localize }}
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>-->
+
+        <!-- Full list -->
+        <ng-template #fullList>
+            <tbody>
+                <tr *ngFor="let course of courses; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ course.title }}</td>
+                    <td>{{ course.description }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-secondary" (click)="EditCourse(course)">
+                            <i class="fas fa-edit"></i>{{ "Edit" | localize }}
+                        </button>
+
+                        <button class="btn btn-primary btn-sm" (click)="DeleteCourse(course)">
+                            <i class="fas fa-trash"></i>{{ "Delete" | localize }}
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </ng-template>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

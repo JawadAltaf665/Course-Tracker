@@ -1,9 +1,117 @@
 <div class="wrapper">
-  <app-header></app-header>
-  <sidebar></sidebar>
-  <div class="content-wrapper">
-    <router-outlet></router-outlet>
-  </div>
-  <app-footer></app-footer>
-  <div id="sidebar-overlay" (click)="toggleSidebar()"></div>
+    <app-header></app-header>
+    <sidebar></sidebar>
+    <div class="content-wrapper">
+        <router-outlet></router-outlet>
+    </div>
+    <app-footer></app-footer>
+    <div id="sidebar-overlay" (click)="toggleSidebar()"></div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="card-header bg-primary d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Courses List</h5>
+</div>
+<div class="input-group mb-3">
+    <input type="text" [(ngModel)]="searchKeyword" placeholder="Search Courses..." class="form-control">
+    <button class="btn btn-primary" (click)="onSearch(searchKeyword)">Search</button>
+</div>-->
+
+<!-- Table -->
+<!--<table class="table table-striped" *ngIf="(filteredCourses.length > 0) || (courses.length > 0)">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Course Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody *ngIf="filteredCourses.length > 0; else fullList">
+        <tr *ngFor="let course of filteredCourses; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ course.title }}</td>
+            <td>{{ course.description }}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-secondary" (click)="EditCourse(course)">
+                    <i class="fas fa-edit"></i>{{ "Edit" | localize }}
+                </button>
+
+                <button class="btn btn-primary btn-sm" (click)="DeleteCourse(course)">
+                    <i class="fas fa-trash"></i>{{ "Delete" | localize }}
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>-->
+
+<!-- Full list -->
+<!--<ng-template #fullList>
+    <tbody>
+        <tr *ngFor="let course of courses; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ course.title }}</td>
+            <td>{{ course.description }}</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-secondary" (click)="EditCourse(course)">
+                    <i class="fas fa-edit"></i>{{ "Edit" | localize }}
+                </button>
+
+                <button class="btn btn-primary btn-sm" (click)="DeleteCourse(course)">
+                    <i class="fas fa-trash"></i>{{ "Delete" | localize }}
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</ng-template>-->

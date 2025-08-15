@@ -121,7 +121,7 @@ namespace CourseTracker.AppService
 
         }
 
-        [UnitOfWork]
+        [UnitOfWork] [RemoteService(false)]
         public async Task CreateCourseWIthModuleDTO(CreateCourseWithModulesRequest input)
         {
             var course = _mapper.Map<Entities.Course>(input.Course);
