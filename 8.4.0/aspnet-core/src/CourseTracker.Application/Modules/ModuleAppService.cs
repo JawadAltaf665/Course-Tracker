@@ -54,8 +54,10 @@ namespace CourseTracker.Modules
         }
 
         public async Task<List<ModuleDTO>> GetAllModulesAsync()
-        {
+       {
             var modules = await _moduleRepository.GetAllListAsync();
+            // var modules = await _moduleRepository.GetAllIncluding(m => m.Course)
+               // .ToListAsync();
 
             return _mapper.Map<List<ModuleDTO>>(modules);
 

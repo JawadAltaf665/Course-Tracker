@@ -1,0 +1,102 @@
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header bg-primary btn-sm d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Create Learner</h5>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="LearnerForm">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="hidden"
+                               class="form-control"
+                               formControlName="id">
+
+                        <label class="form-label">
+                            {{ "Name" | localize }}
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter Name"
+                               formControlName="name">
+
+                        <div *ngIf="f['name'].touched && f['name'].invalid" class="text-danger mt-1">
+                            <div *ngIf="f['name'].errors?.['required']">
+                                {{ "Name is required!" | localize }}
+                            </div>
+                            <div *ngIf="f['title'].errors?.['minlength']">
+                                {{ "Name must be at least 3 characters long!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            {{ "Email" | localize }}
+                        </label>
+                        <input type="email"
+                               class="form-control"
+                               placeholder="Enter Email"
+                               formControlName="email">
+
+                        <div *ngIf="f['email'].touched && f['email'].invalid" class="text-danger mt-1">
+                            <div *ngIf="f['email'].errors?.['required']">
+                                {{ "Email is required!" | localize }}
+                            </div>
+                            <div *ngIf="f['email'].errors?.['email']">
+                                {{ "Invalid email format!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end" style="display:flex; gap:10px;">
+                    <button type="button"
+                            class="btn btn-sm btn-secondary"
+                            (click)="Reset()">
+                        {{ "Reset" | localize }}
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-sm btn-primary"
+                            (click)="Save()"
+                            [disabled]="LearnerForm.invalid">
+                        {{ "Save" | localize }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Learners List</h5>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let learner of learners; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ learner.name }}</td>
+                        <td>{{ learner.email }}</td>
+                        <td>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="btn btn-sm btn-secondary me-2" (click)="EditLearner(learner)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
+                                <button class="btn btn-primary btn-sm" (click)="DeleteLearner(learner)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

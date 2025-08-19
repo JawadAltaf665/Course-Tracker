@@ -33,7 +33,7 @@ namespace CourseTracker.Learners_
                 Email = input.Email
             };
 
-            var learnerDto = _mapper.Map<LearnerDto>(learner);
+            _mapper.Map<LearnerDto>(learner);
 
             _learnerRepo.InsertAndGetId(learner);
 

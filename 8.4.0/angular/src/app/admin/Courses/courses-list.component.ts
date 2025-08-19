@@ -12,7 +12,7 @@ import { courseDto } from '@shared/Dtos/courseDto'; // Adjust the import path as
     //  styleUrls: ['./courses-list.component.css']
 })
 export class CoursesListComponent implements OnInit {
-    public courseListForm: FormGroup;
+    public courseForm: FormGroup;
     public apiUrl = 'https://localhost:44311/api/services/app/Course';
     courses: any[] = [];
     searchKeyword = '';
@@ -26,12 +26,16 @@ export class CoursesListComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.courseListForm = this.fb.group({
+        this.courseForm = this.fb.group({
             id: 0,
-            title: ['', Validators.required],
-            description: ['', Validators.required],
+            title: ['', [Validators.required]],
+            description: [''],
         })
         this.loadCourseList();
+    }
+
+    get f() {
+        return this.courseForm.controls;
     }
 
     public loadCourseList() {
@@ -50,7 +54,10 @@ export class CoursesListComponent implements OnInit {
 
     public Save() {
         debugger;
-        var formData = this.courseListForm.value;
+        if (this.courseForm.invalid) {
+            return;
+        }
+        var formData = this.courseForm.value;
         console.log(formData);
 
         if (formData.id == 0) {
@@ -58,7 +65,7 @@ export class CoursesListComponent implements OnInit {
                 .subscribe({
                     next: (response: any) => {
                         console.log('Course created successfully!', response);
-                        this.courseListForm.reset();
+                        this.courseForm.reset();
                         this.loadCourseList();
                     },
                     error: (error: any) => {
@@ -71,7 +78,7 @@ export class CoursesListComponent implements OnInit {
                 .subscribe({
                     next: (response: any) => {
                         console.log('Course updated successfully!', response);
-                        this.courseListForm.reset();
+                        this.courseForm.reset();
                         this.loadCourseList();
                     },
                     error: (error: any) => {
@@ -83,12 +90,12 @@ export class CoursesListComponent implements OnInit {
     }
 
     public Reset() {
-        this.courseListForm.reset();
+        this.courseForm.reset();
     }
 
     public EditCourse(course: any) {
         debugger;
-        this.courseListForm.patchValue({
+        this.courseForm.patchValue({
             id: course.id,
             title: course.title,
             description: course.description
@@ -97,16 +104,18 @@ export class CoursesListComponent implements OnInit {
 
     public DeleteCourse(course: any) {
         debugger;
-        this.http.delete(`${this.apiUrl}/DeleteCourse?id=${course.id}`)
-            .subscribe({
-                next: (response: any) => {
-                    console.log('Course deleted successfully!', response);
-                    this.loadCourseList();
-                },
-                error: (error: any) => {
-                    console.error('There was an error!', error);
-                }
-            });
+        if (confirm(`Are you sure you want to delete ${course.title}?`)) {
+            this.http.delete(`${this.apiUrl}/DeleteCourse?id=${course.id}`)
+                .subscribe({
+                    next: (response: any) => {
+                        console.log('Course deleted successfully!', response);
+                        this.loadCourseList();
+                    },
+                    error: (error: any) => {
+                        console.error('There was an error!', error);
+                    }
+                });
+        }
     }
 
     public onSearch(searchKeyword: string) {

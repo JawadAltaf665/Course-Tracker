@@ -39,6 +39,11 @@ import { SidebarLogoComponent } from './layout/sidebar-logo.component';
 import { SidebarUserPanelComponent } from './layout/sidebar-user-panel.component';
 import { SidebarMenuComponent } from './layout/sidebar-menu.component';
 import { CoursesListComponent } from './admin/Courses/courses-list.component';
+import { ModuleListComponent } from './admin/Modules/module-list.component';
+import { LearnerListComponent } from './admin/Learners/Learner-list.component';
+import { EnrollmentListComponent } from './admin/Enrollments/enrollment-list.component';
+
+
 
 @NgModule({
     declarations: [
@@ -69,7 +74,10 @@ import { CoursesListComponent } from './admin/Courses/courses-list.component';
         SidebarLogoComponent,
         SidebarUserPanelComponent,
         SidebarMenuComponent,
-        CoursesListComponent
+        CoursesListComponent,
+        ModuleListComponent,
+        LearnerListComponent,
+        EnrollmentListComponent
     ],
     imports: [
         CommonModule,

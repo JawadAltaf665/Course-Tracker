@@ -1,0 +1,134 @@
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-header bg-primary btn-sm d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Create Module</h5>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="moduleForm">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="hidden"
+                               class="form-control"
+                               formControlName="id">
+
+                        <label class="form-label">
+                            {{ "Module Title" | localize }}
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter module title"
+                               formControlName="title">
+                        <!-- Validation messages -->
+                        <div *ngIf="f['title'].touched && f['title'].invalid" class="text-danger mt-1">
+                            <div *ngIf="f['title'].errors?.['required']">
+                                {{ "Title is required!" | localize }}
+                            </div>
+                            <div *ngIf="f['title'].errors?.['minlength']">
+                                {{ "Title must be at least 3 characters long!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            {{ "Description" | localize }}
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter description"
+                               formControlName="description">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            {{ "Course Name" | localize }}
+                        </label>
+                        <select class="form-control
+                                form-select-lg mb-3"
+                                formControlName="courseId">
+                            <option value="" selected>Select Course</option>
+                            <option *ngFor="let course of courses" [value]="course.id">
+                                {{ course.title }}
+                            </option>
+                        </select>
+
+                        <!-- Validation messages -->
+                        <div *ngIf="f['courseId'].touched && f['courseId'].invalid" class="text-danger mt-1">
+                            <div *ngIf="f['courseId'].errors?.['required']">
+                                {{ "Course is required!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end" style="display:flex; gap:10px;">
+                    <button type="button"
+                            class="btn btn-sm btn-secondary"
+                            (click)="Reset()">
+                        {{ "Reset" | localize }}
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-sm btn-primary"
+                            (click)="Save()"
+                            [disabled]="moduleForm.invalid">
+                        {{ "Save" | localize }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Courses Module List</h5>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Module Title</th>
+                        <th>Description</th>
+                        <!--<th>Course Name</th>-->
+                        <!--<th>Description</th>-->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let module of modules; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ module.title }}</td>
+                        <td>{{ module.description }}</td>
+                        <!--<td>{{ module.course?.title }}</td>-->
+                        <td>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="btn btn-sm btn-secondary me-2" (click)="EditModule(module)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+
+                                <button class="btn btn-primary btn-sm" (click)="DeleteModule(module)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- No records found template -->
+            <!--<ng-template #noRecordFound>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            {{ "No records found" | localize }}
+                        </td>
+                    </tr>
+                </tbody>
+            </ng-template>-->
+
+        </div>
+    </div>
+
+
+</div>

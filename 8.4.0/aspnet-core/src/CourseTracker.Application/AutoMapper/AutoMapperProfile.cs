@@ -17,24 +17,24 @@ namespace CourseTracker.AutoMapper
         public AutoMapperProfile()
         {
             // Course
-            CreateMap<CourseDTO, CourseTracker.Entities.Course>();
-            CreateMap<CreateUpdateCourseDTO, CourseTracker.Entities.Course>();
+            CreateMap<Entities.Course, CourseDTO>(); 
+            CreateMap<CreateUpdateCourseDTO, Entities.Course>();
 
             // Learner
             CreateMap<Learner, LearnerDto>();
-            CreateMap<Learners_.Dtos.CreateUpdateLearnerDTO, Learner>();
+            CreateMap<CreateUpdateLearnerDTO, Learner>();
 
             // Module
             CreateMap<Module, ModuleDTO>()
-                .ForMember(dest => dest.Course, opt => opt.MapFrom(src => src.Course))
-                .ReverseMap();
+                .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.Course.Title));
             CreateMap<CreateUpdateModuleDTO, Module>();
 
             // Enrollment
             CreateMap<Enrollment, EnrollmentDTO>()
-                .ForMember(dest => dest.LearnerName, opt => opt.MapFrom(src => src.Learner.Name)) 
-                .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title));    
+                .ForMember(dest => dest.LearnerName, opt => opt.MapFrom(src => src.Learner.Name))
+                .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title));
             CreateMap<CreateUpdateEnrollmentDTO, Enrollment>();
+
 
 
         }

@@ -9,6 +9,8 @@ import { TenantsComponent } from './tenants/tenants.component';
 import { RolesComponent } from 'app/roles/roles.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
 import { CoursesListComponent } from './admin/Courses/courses-list.component';
+import { ModuleListComponent } from './admin/Modules/module-list.component';
+import { LearnerListComponent } from './admin/Learners/Learner-list.component';
 
 @NgModule({
     imports: [
@@ -23,7 +25,9 @@ import { CoursesListComponent } from './admin/Courses/courses-list.component';
                     { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
                     { path: 'about', component: AboutComponent, canActivate: [AppRouteGuard] },
                     { path: 'update-password', component: ChangePasswordComponent, canActivate: [AppRouteGuard] },
-                    { path: 'course-list', component: CoursesListComponent, canActivate: [AppRouteGuard] }
+                    { path: 'course-list', component: CoursesListComponent, canActivate: [AppRouteGuard] },
+                    { path: 'module-list', component: ModuleListComponent, canActivate: [AppRouteGuard] },
+                    { path: 'learner-list', component: LearnerListComponent, canActivate: [AppRouteGuard] }
 
                 ]
             }
