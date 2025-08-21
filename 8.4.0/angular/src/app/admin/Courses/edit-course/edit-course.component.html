@@ -1,0 +1,70 @@
+<form [formGroup]="courseForm"
+      (ngSubmit)="saveCourse()"
+      autocomplete="off"
+      class="form-horizontal">
+
+    <abp-modal-header [title]="'Edit Course' | localize"
+                      (onCloseClick)="bsModalRef.hide()">
+    </abp-modal-header>
+
+    <div class="modal-body">
+        <tabset>
+            <tab [heading]="'Details' | localize" class="pt-3 px-2">
+
+                <input type="hidden"
+                       class="form-control"
+                       formControlName="id" />
+
+                <div class="form-group row required">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Course Title" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <input type="text"
+                               class="form-control"
+                               formControlName="title"
+                               placeholder="{{ 'Enter course title' | localize }}"
+                               [class.is-invalid]="courseForm.get('title')?.invalid && courseForm.get('title')?.touched" />
+
+                        <div *ngIf="courseForm.get('title')?.invalid && courseForm.get('title')?.touched"
+                             class="invalid-feedback">
+                            <div *ngIf="courseForm.get('title')?.errors?.['required']">
+                                {{ "Title is required" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Description" | localize }}
+                    </label>
+                    <div class="col-md-9">
+                        <textarea class="form-control"
+                                  formControlName="description"
+                                  rows="2"
+                                  placeholder="{{ 'Enter course description' | localize }}"></textarea>
+                    </div>
+                </div>
+
+            </tab>
+        </tabset>
+    </div>
+
+    <abp-modal-footer>
+        <button type="button"
+                class="btn btn-secondary mr-2"
+                (click)="bsModalRef.hide()">
+            <i class="fa fa-times"></i>
+            {{ "Cancel" | localize }}
+        </button>
+
+        <button type="submit"
+                class="btn btn-primary"
+                [disabled]="courseForm.invalid">
+            <i class="fa fa-save"></i>
+            {{ "Save" | localize }}
+        </button>
+    </abp-modal-footer>
+</form>

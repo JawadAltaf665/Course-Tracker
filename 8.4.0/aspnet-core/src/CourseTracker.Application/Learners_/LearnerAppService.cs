@@ -37,7 +37,7 @@ namespace CourseTracker.Learners_
 
             _learnerRepo.InsertAndGetId(learner);
 
-            await _learnerRepo.InsertAsync(learner);
+            // await _learnerRepo.InsertAsync(learner);
            
         }
 
@@ -53,7 +53,7 @@ namespace CourseTracker.Learners_
             await _learnerRepo.DeleteAsync(selectedLearner);
         }
 
-        public async Task<List<LearnerDto>> GetAllLearnerAsync()
+        public async Task<List<LearnerDto>> GetAllLearnersAsync()
         {
             var learners = await _learnerRepo.GetAllListAsync();
 

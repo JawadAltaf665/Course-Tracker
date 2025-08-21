@@ -27,12 +27,15 @@ namespace CourseTracker.EntityFrameworkCore
             builder.Entity<Enrollment>()
                 .HasOne(e => e.Course)
                 .WithMany(c => c.Enrollments)
-                .HasForeignKey(e => e.CourseId);
+                .HasForeignKey(e => e.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.Entity<Enrollment>()
                 .HasOne(e => e.Learner)
                 .WithMany(l => l.Enrollments)
-                .HasForeignKey(e => e.LearnerId);
+                .HasForeignKey(e => e.LearnerId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
     }

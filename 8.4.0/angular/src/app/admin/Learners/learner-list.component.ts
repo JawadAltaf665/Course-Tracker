@@ -33,7 +33,7 @@ export class LearnerListComponent implements OnInit {
 
     public loadLearnerList() {
         debugger;
-        this.http.get<any[]>(`${this.apiUrl}/GetAllLearner`)
+        this.http.get<any[]>(`${this.apiUrl}/GetAllLearners`)
             .subscribe({
                 next: (response: any) => {
                     this.learners = response.result;

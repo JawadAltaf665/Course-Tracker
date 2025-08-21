@@ -10,7 +10,7 @@ namespace CourseTracker.Learners_
 {
     public interface ILearnerAppService: IApplicationService
     {
-        Task<List<LearnerDto>> GetAllLearnerAsync();
+        Task<List<LearnerDto>> GetAllLearnersAsync();
         Task<LearnerDto> GetLearnerByIdAsync(int id);
         Task CreateLearnerAsync(CreateUpdateLearnerDTO input);
         Task UpdateLearnerAsync(CreateUpdateLearnerDTO input);

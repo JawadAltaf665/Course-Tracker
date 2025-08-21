@@ -11,6 +11,7 @@ import { ChangePasswordComponent } from './users/change-password/change-password
 import { CoursesListComponent } from './admin/Courses/courses-list.component';
 import { ModuleListComponent } from './admin/Modules/module-list.component';
 import { LearnerListComponent } from './admin/Learners/Learner-list.component';
+import { EnrollmentListComponent } from './admin/Enrollments/enrollment-list.component';
 
 @NgModule({
     imports: [
@@ -25,9 +26,10 @@ import { LearnerListComponent } from './admin/Learners/Learner-list.component';
                     { path: 'tenants', component: TenantsComponent, data: { permission: 'Pages.Tenants' }, canActivate: [AppRouteGuard] },
                     { path: 'about', component: AboutComponent, canActivate: [AppRouteGuard] },
                     { path: 'update-password', component: ChangePasswordComponent, canActivate: [AppRouteGuard] },
-                    { path: 'course-list', component: CoursesListComponent, canActivate: [AppRouteGuard] },
-                    { path: 'module-list', component: ModuleListComponent, canActivate: [AppRouteGuard] },
-                    { path: 'learner-list', component: LearnerListComponent, canActivate: [AppRouteGuard] }
+                    { path: 'courses', component: CoursesListComponent, data: { Permission: 'Pages.Courses' }, canActivate: [AppRouteGuard] },
+                    { path: 'modules', component: ModuleListComponent, data: { Permission: 'Pages.Modules' }, canActivate: [AppRouteGuard] },
+                    { path: 'learners', component: LearnerListComponent, data: { Permission: 'Pages.Learners' }, canActivate: [AppRouteGuard] },
+                    { path: 'enrollments', component: EnrollmentListComponent, data: { Permission: 'Pages.Enrollments' }, canActivate: [AppRouteGuard] },
 
                 ]
             }

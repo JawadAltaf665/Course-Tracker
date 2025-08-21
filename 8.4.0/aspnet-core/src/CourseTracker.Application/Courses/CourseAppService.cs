@@ -135,6 +135,7 @@ namespace CourseTracker.AppService
                 await _moduleRepo.InsertAsync(module);
             }
         }
+
         public async Task<List<CourseDTO>> GetCoursesByKeyword(string keyword)
         {
             var course = await _courseRepo.GetAll()

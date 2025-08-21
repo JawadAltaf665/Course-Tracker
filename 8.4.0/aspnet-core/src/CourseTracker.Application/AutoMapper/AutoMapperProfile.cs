@@ -26,13 +26,15 @@ namespace CourseTracker.AutoMapper
 
             // Module
             CreateMap<Module, ModuleDTO>()
-                .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.Course.Title));
+                .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title));
             CreateMap<CreateUpdateModuleDTO, Module>();
 
             // Enrollment
             CreateMap<Enrollment, EnrollmentDTO>()
-                .ForMember(dest => dest.LearnerName, opt => opt.MapFrom(src => src.Learner.Name))
-                .ForMember(dest => dest.CourseTitle, opt => opt.MapFrom(src => src.Course.Title));
+                .ForMember(dest => dest.CourseTitle,
+                    opt => opt.MapFrom(src => src.Course.Title))
+                .ForMember(dest => dest.LearnerName,
+                    opt => opt.MapFrom(src => src.Learner.Name ));
             CreateMap<CreateUpdateEnrollmentDTO, Enrollment>();
 
 

@@ -42,6 +42,9 @@ import { CoursesListComponent } from './admin/Courses/courses-list.component';
 import { ModuleListComponent } from './admin/Modules/module-list.component';
 import { LearnerListComponent } from './admin/Learners/Learner-list.component';
 import { EnrollmentListComponent } from './admin/Enrollments/enrollment-list.component';
+import { CreateCourseComponent } from './admin/Courses/create-course/create-course.component';
+import { EditCourseComponent } from './admin/Courses/edit-course/edit-course.component';
+
 
 
 
@@ -77,7 +80,9 @@ import { EnrollmentListComponent } from './admin/Enrollments/enrollment-list.com
         CoursesListComponent,
         ModuleListComponent,
         LearnerListComponent,
-        EnrollmentListComponent
+        EnrollmentListComponent,
+        CreateCourseComponent,
+        EditCourseComponent
     ],
     imports: [
         CommonModule,

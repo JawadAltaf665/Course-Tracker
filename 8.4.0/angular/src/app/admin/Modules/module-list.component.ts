@@ -41,10 +41,12 @@ export class ModuleListComponent implements OnInit {
             next: (moduleRes: any) => {
                 debugger;
                 this.modules = moduleRes.result;
+                console.warn('Modules loaded successfully:', this.modules);
 
                 this.http.get(`${this.courseApiUrl}/GetAllCourses`).subscribe({
                     next: (courseRes: any) => {
                         this.courses = courseRes.result;
+                        console.warn('Courses loaded successfully:', this.courses);
                     },
                     error: (err: any) => console.error('Error loading courses!', err)
                 });

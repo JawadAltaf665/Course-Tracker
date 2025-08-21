@@ -1,0 +1,50 @@
+<form class="form-horizontal"
+      autocomplete="off"
+      [formGroup]="courseForm"
+      (ngSubmit)="saveCourse()">
+    <abp-modal-header [title]="'Create Course' | localize"
+                      (onCloseClick)="bsModalRef.hide()">
+    </abp-modal-header>
+
+    <div class="modal-body">
+        <tabset>
+            <tab [heading]="'Details' | localize" class="pt-3 px-2">
+                <div class="form-group row">
+                    <input type="hidden" formControlName="id" />
+
+                    <label class="col-md-3 col-form-label">
+                        {{ "Course Title" | localize }}
+                    </label>
+                    <div class="col-md-9">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter course title"
+                               formControlName="title" />
+                        <div class="text-danger mt-1"
+                             *ngIf="f['title'].touched && f['title'].invalid">
+                            <div *ngIf="f['title'].errors?.['required']">
+                                {{ "Title is required!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mb-0">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Description" | localize }}
+                    </label>
+                    <div class="col-md-9">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter description"
+                               formControlName="description" />
+                    </div>
+                </div>
+            </tab>
+        </tabset>
+    </div>
+
+    <abp-modal-footer [cancelDisabled]="false"
+                      [saveDisabled]="courseForm.invalid"
+                      (onCancelClick)="Reset()"></abp-modal-footer>
+</form>
