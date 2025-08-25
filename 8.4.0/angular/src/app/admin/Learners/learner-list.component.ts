@@ -1,118 +1,95 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CreateLearnerComponent } from './create-learner/create-learner.component';
+import { EditLearnerComponent } from './edit-learner/edit-learner.component';
+import { learnerDto } from '@shared/Dtos/learnerDto'
 
 @Component({
-  selector: 'app-learner-list',
-  templateUrl: './learner-list.component.html',
-//  styleUrls: ['./learner-list.component.css']
+    selector: 'app-learner-list',
+    templateUrl: './learner-list.component.html',
 })
 export class LearnerListComponent implements OnInit {
-    public LearnerForm: FormGroup;
     public apiUrl = 'https://localhost:44311/api/services/app/Learner';
-    public learners: any[] = [];
+
+    learners: learnerDto[] = [];
+    currentPagedLearners: any[] = [];
+    searchKeyword = '';
+
+    pageNumber = 1;
+    pageSize = 5;
+    totalItems = 0;
 
     constructor(
-        private fb: FormBuilder,
-        private http: HttpClient
+        private http: HttpClient,
+        public bsModalRef: BsModalRef,
+        private modalService: BsModalService
     ) { }
 
     ngOnInit(): void {
-        this.LearnerForm = this.fb.group({
-            id: 0,
-            name: ['', [Validators.required, Validators.minLength(3)]],
-            email: ['', [Validators.required, Validators.email]],
-        })
         this.loadLearnerList();
     }
 
-    get f() {
-        return this.LearnerForm.controls;
-    }
-
     public loadLearnerList() {
-        debugger;
-        this.http.get<any[]>(`${this.apiUrl}/GetAllLearners`)
-            .subscribe({
-                next: (response: any) => {
-                    this.learners = response.result;
-                    console.log('Learners loaded successfully:', this.learners);
-                },
-                error: (error: any) => {
-                    console.error('There was an error loading learners!', error);
-                }
-            })
+        this.http.get<any>(`${this.apiUrl}/GetAllLearners`).subscribe({
+            next: (response) => {
+                this.learners = response.result || [];
+                this.totalItems = this.learners.length;
+            },
+            error: (error) => console.error('Error loading learners!', error)
+        });
     }
 
-    Reset() {
-        this.LearnerForm.reset();
+    public openCreateLearnerDialog() {
+        const modalRef = this.modalService.show(CreateLearnerComponent);
+        modalRef.content.onSave?.subscribe(() => this.loadLearnerList());
     }
 
-    Save() {
-        debugger;
-        if (this.LearnerForm.invalid) {
+    public EditLearner(learner: learnerDto) {
+        const initialState = { learner };
+        const modalRef = this.modalService.show(EditLearnerComponent, { initialState });
+        modalRef.content.onSave?.subscribe(() => this.loadLearnerList());
+    }
+
+    public DeleteLearner(learner: any): void {
+        abp.message.confirm(
+            `Are you sure you want to delete "${learner.name}"?`,
+            'Delete Confirmation'
+        ).then((result: boolean) => {
+            if (result) {
+                this.http.delete(`${this.apiUrl}/DeleteLearner?id=${learner.id}`).subscribe({
+                    next: () => {
+                        abp.notify.success('Learner deleted successfully!');
+                        this.loadLearnerList();
+                    },
+                    error: (error) => {
+                        abp.notify.error('Error deleting learner!');
+                        console.error('Error deleting learner!', error);
+                    }
+                });
+            }
+        });
+    }
+
+
+    public onSearch(keyword: string) {
+        if (!keyword || keyword.trim() === '') {
+            this.loadLearnerList();
             return;
         }
 
-        var formData = this.LearnerForm.value;
-        console.log(formData);
-
-        if (formData.id == 0) {
-            debugger;
-            this.http.post(`${this.apiUrl}/CreateLearner`, formData)
-                .subscribe({
-                    next: (response: any) => {
-                        console.log('Learner created successfully!', response);
-                        this.LearnerForm.reset();
-                        this.loadLearnerList();
-                    },
-                    error: (error: any) => {
-                        console.error('There was an error creating the learner!', error);
-                    }
-                })
-        } else {
-            debugger;
-            this.http.put(`${this.apiUrl}/UpdateLearner`, formData)
-                .subscribe({
-                    next: (response: any) => {
-                        console.log('Learner updated successfully!', response);
-                        this.LearnerForm.reset();
-                        this.loadLearnerList();
-                    },
-                    error: (error: any) => {
-                        console.warn('There was an error updating the learner!', error);
-                    }
-                })
-        }
-       
+        this.http.get<any>(`${this.apiUrl}/GetLearnersByKeyword?keyword=${keyword}`).subscribe({
+            next: (response) => {
+                this.learners = response.result || [];
+                this.totalItems = this.learners.length;
+            },
+            error: (error) => console.error('Error searching learners!', error)
+        });
     }
 
-    EditLearner(learner: any) {
-        debugger;
-        this.LearnerForm.patchValue({
-            id: learner.id,
-            name: learner.name,
-            email: learner.email
-        })
+    public refresh() {
+        this.searchKeyword = '';
+        this.pageNumber = 1;
+        this.loadLearnerList();
     }
-
-    DeleteLearner(Learner: any) {
-        debugger;
-        if (confirm(`Are you sure you want to delete ${Learner.name}?`)) {
-            this.http.delete(`${this.apiUrl}/DeleteLearner?id=${Learner.id}`)
-                .subscribe({
-                    next: (response: any) => {
-                        console.warn('Learner deleted successfully!', response);
-                        this.loadLearnerList();
-                    },
-                    error: (error: any) => {
-                        console.error('There was an error deleting the learner!', error);
-                    }
-                })
-        }
-    }
-
-
-
 }

@@ -44,8 +44,12 @@ import { LearnerListComponent } from './admin/Learners/Learner-list.component';
 import { EnrollmentListComponent } from './admin/Enrollments/enrollment-list.component';
 import { CreateCourseComponent } from './admin/Courses/create-course/create-course.component';
 import { EditCourseComponent } from './admin/Courses/edit-course/edit-course.component';
-
-
+import { CreateModuleComponent } from './admin/Modules/create-module/create-module.component';
+import { EditModuleComponent } from './admin/Modules/edit-module/edit-module.component';
+import { CreateLearnerComponent } from './admin/Learners/create-learner/create-learner.component';
+import { EditLearnerComponent } from './admin/Learners/edit-learner/edit-learner.component';
+import { CreateEnrollmentComponent } from './admin/Enrollments/create-enrollment/create-enrollment.component';
+import { EditEnrollmentComponent } from './admin/Enrollments/edit-enrollment/edit-enrollment.component';
 
 
 @NgModule({
@@ -82,7 +86,13 @@ import { EditCourseComponent } from './admin/Courses/edit-course/edit-course.com
         LearnerListComponent,
         EnrollmentListComponent,
         CreateCourseComponent,
-        EditCourseComponent
+        EditCourseComponent,
+        CreateModuleComponent,
+        EditModuleComponent,
+        CreateLearnerComponent,
+        EditLearnerComponent,
+        CreateEnrollmentComponent,
+        EditEnrollmentComponent
     ],
     imports: [
         CommonModule,
@@ -98,6 +108,8 @@ import { EditCourseComponent } from './admin/Courses/edit-course/edit-course.com
         ServiceProxyModule,
         SharedModule,
         NgxPaginationModule,
+
+        
     ],
     providers: []
 })

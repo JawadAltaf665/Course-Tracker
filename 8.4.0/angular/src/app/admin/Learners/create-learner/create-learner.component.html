@@ -1,0 +1,67 @@
+<form class="form-horizontal"
+      autocomplete="off"
+      [formGroup]="learnerForm"
+      (ngSubmit)="saveLearner()">
+    <abp-modal-header [title]="'Create Learner' | localize"
+                      (onCloseClick)="bsModalRef.hide()">
+    </abp-modal-header>
+
+    <div class="modal-body">
+        <tabset>
+            <tab [heading]="'Details' | localize" class="pt-3 px-2">
+
+                <input type="hidden" formControlName="id" />
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Name" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter name"
+                               formControlName="name" />
+                        <div class="text-danger mt-1"
+                             *ngIf="f['name'].touched && f['name'].invalid">
+                            <div *ngIf="f['name'].errors?.['required']">
+                                {{ "Name is required!" | localize }}
+                            </div>
+                            <div *ngIf="f['name'].errors?.['minlength']">
+                                {{ "Name must be at least 3 characters long!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mb-0 mt-3">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Email" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <input type="email"
+                               class="form-control"
+                               placeholder="Enter email"
+                               formControlName="email" />
+                        <div class="text-danger mt-1"
+                             *ngIf="f['email'].touched && f['email'].invalid">
+                            <div *ngIf="f['email'].errors?.['required']">
+                                {{ "Email is required!" | localize }}
+                            </div>
+                            <div *ngIf="f['email'].errors?.['email']">
+                                {{ "Invalid email format!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </tab>
+        </tabset>
+    </div>
+
+    <abp-modal-footer [cancelDisabled]="false"
+                      [saveDisabled]="learnerForm.invalid"
+                      (onCancelClick)="Reset()">
+    </abp-modal-footer>
+</form>

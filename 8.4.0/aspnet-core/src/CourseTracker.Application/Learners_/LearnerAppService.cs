@@ -5,6 +5,8 @@ using Abp.UI;
 using AutoMapper;
 using CourseTracker.Entities;
 using CourseTracker.Learners_.Dtos;
+using CourseTracker.Modules.Dtos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +59,10 @@ namespace CourseTracker.Learners_
         {
             var learners = await _learnerRepo.GetAllListAsync();
 
+            if (!learners.Any()) {
+                throw new UserFriendlyException("No learners found.");
+            }
+
             return _mapper.Map<List<LearnerDto>>(learners);
         }
 
@@ -96,6 +102,26 @@ namespace CourseTracker.Learners_
             var dto = _mapper.Map<LearnerDto>(learner);
 
             await _learnerRepo.UpdateAsync(learner);
+        }
+
+        public async Task<List<LearnerDto>> GetLearnersByKeyword(string keyword)
+        {
+            var learner = await _learnerRepo.GetAll()
+                .Where(l => l.Name.Contains(keyword) || l.Email.Contains(keyword))
+                .Select(l => new LearnerDto
+                {
+                    Name = l.Name,
+                    Email = l.Email,
+                    Id = l.Id
+                }).ToListAsync();
+
+            if (!learner.Any())
+            {
+                throw new UserFriendlyException($"No courses found with keyword '{keyword}'.");
+            }
+
+            return _mapper.Map<List<LearnerDto>>(learner);
+
         }
     }
 }

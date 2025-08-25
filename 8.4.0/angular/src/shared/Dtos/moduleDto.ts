@@ -3,5 +3,5 @@ export interface moduleDto {
     title: string;
     description: string;
     courseId: number;
-    courseName: string;
+    courseTitle: string;
 }

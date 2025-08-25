@@ -10,17 +10,14 @@ import { EditCourseComponent } from './edit-course/edit-course.component';
     templateUrl: './courses-list.component.html',
 })
 export class CoursesListComponent implements OnInit {
-    courses: courseDto[] = [];          // Full list from API
-    pagedCourses: courseDto[] = [];     // Current page data (for pagination)
+    public apiUrl = 'https://localhost:44311/api/services/app/Course';
+    courses: courseDto[] = [];
+    currentPagedCourses: courseDto[] = [];
     searchKeyword = '';
 
-    // 🔹 Pagination props
     pageNumber = 1;
     pageSize = 5;
     totalItems = 0;
-
-    // API Base URL
-    public apiUrl = 'https://localhost:44311/api/services/app/Course';
 
     constructor(
         private http: HttpClient,
@@ -35,10 +32,9 @@ export class CoursesListComponent implements OnInit {
     public loadCourseList() {
         this.http.get<any>(`${this.apiUrl}/GetAllCourses`).subscribe({
             next: (response) => {
+                debugger;
                 this.courses = response.result || [];
                 this.totalItems = this.courses.length;
-                // 👇 The fix: Call getDataPage() to populate pagedCourses
-                this.getDataPage(this.pageNumber);
             },
             error: (error) => {
                 console.error('Error loading courses!', error);
@@ -46,7 +42,7 @@ export class CoursesListComponent implements OnInit {
         });
     }
 
-    
+
 
     public openCreateJobDialog() {
         const modalRef = this.modalService.show(CreateCourseComponent);
@@ -59,21 +55,29 @@ export class CoursesListComponent implements OnInit {
         modalRef.content.onSave?.subscribe(() => this.loadCourseList());
     }
 
-    public DeleteCourse(course: courseDto) {
-        if (confirm(`Are you sure you want to delete ${course.title}?`)) {
-            this.http.delete(`${this.apiUrl}/DeleteCourse?id=${course.id}`).subscribe({
-                next: () => {
-                    console.log('Course deleted successfully!');
-                    this.loadCourseList();
-                },
-                error: (error) => {
-                    console.error('Error deleting course!', error);
-                },
-            });
-        }
+    public DeleteCourse(course: courseDto): void {
+        abp.message.confirm(
+            'Are you sure you want to delete "' + course.title + '"?',
+            'Delete Confirmation'
+        ).then((result: boolean) => {
+            if (result) {
+                this.http.delete(`${this.apiUrl}/DeleteCourse?id=${course.id}`).subscribe({
+                    next: () => {
+                        abp.notify.success('Course deleted successfully!');
+                        this.loadCourseList();
+                    },
+                    error: (error) => {
+                        abp.notify.error('Error deleting course!');
+                        console.error('Error deleting course!', error);
+                    },
+                });
+            }
+        });
     }
 
+
     public onSearch(keyword: string) {
+        debugger;
         if (!keyword || keyword.trim() === '') {
             this.loadCourseList();
             return;
@@ -84,7 +88,6 @@ export class CoursesListComponent implements OnInit {
                 debugger;
                 this.courses = response.result || [];
                 this.totalItems = this.courses.length;
-                this.getDataPage(this.pageNumber); // Apply pagination
             },
             error: (error) => {
                 console.error('Error searching courses!', error);
@@ -92,18 +95,11 @@ export class CoursesListComponent implements OnInit {
         });
     }
 
-  
 
-    public getDataPage(page: number) {
-        this.pageNumber = page;
-        const startIndex = (page - 1) * this.pageSize;
-        const endIndex = startIndex + this.pageSize;
-        this.pagedCourses = this.courses.slice(startIndex, endIndex);
-    }
 
     public refresh() {
         this.searchKeyword = '';
-        this.pageNumber = 1; // Reset to the first page on refresh
+        this.pageNumber = 1;
         this.loadCourseList();
     }
 }

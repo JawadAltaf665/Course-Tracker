@@ -15,7 +15,7 @@ namespace CourseTracker.Modules
         Task CreateModuleAsync(CreateUpdateModuleDTO input);
         Task UpdateModuleAsync(CreateUpdateModuleDTO input);
         Task DeleteModuleAsync(int id);
-
+        Task<List<ModuleDTO>> GetModulesByKeyword(string keyword);
         Task<List<ModuleDTO>> FilterModuleByCourseId(int courseId);
     }
 }

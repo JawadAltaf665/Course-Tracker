@@ -21,7 +21,7 @@ namespace CourseTracker.AppService
 {
     public class CourseAppService: ApplicationService, ICourseAppService
     {
-        private readonly IRepository<CourseTracker.Entities.Course, int> _courseRepo;
+        private readonly IRepository<Entities.Course, int> _courseRepo;
         private readonly IRepository<Module, int> _moduleRepo;
         private readonly IMapper _mapper; 
 
@@ -95,15 +95,11 @@ namespace CourseTracker.AppService
         {
             var courses = await _courseRepo.GetAllListAsync();
 
-            var allCourses = courses.Select(courses =>
-                new CourseDTO
-                {
-                    Id = courses.Id,
-                    Title = courses.Title,
-                    Description = courses.Description,
-                }).ToList();
+            if (!courses.Any()) {
+                throw new UserFriendlyException("No courses found.");
+            }
 
-            return allCourses;
+            return _mapper.Map<List<CourseDTO>>(courses);
         }
 
         [AbpAuthorize(CoursePermissions.Courses_Update)]
@@ -146,11 +142,6 @@ namespace CourseTracker.AppService
                     Description = c.Description,
                     Id = c.Id
                 }).ToListAsync();
-
-            if (!course.Any())
-            {
-                throw new UserFriendlyException($"No courses found with keyword '{keyword}'.");
-            }
 
             return _mapper.Map<List<CourseDTO>>(course);
             

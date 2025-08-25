@@ -1,0 +1,101 @@
+<form class="form-horizontal"
+      autocomplete="off"
+      [formGroup]="enrollmentForm"
+      (ngSubmit)="saveEnrollment()">
+    <abp-modal-header [title]="'Edit Enrollment' | localize"
+                      (onCloseClick)="bsModalRef.hide()">
+    </abp-modal-header>
+
+    <div class="modal-body">
+        <tabset>
+            <tab [heading]="'Details' | localize" class="pt-3 px-2">
+
+                <input type="hidden" formControlName="id" />
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Course Title" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <select class="form-control form-select"
+                                formControlName="courseId">
+                            <option [ngValue]="null" disabled selected>
+                                Select Course
+                            </option>
+                            <option *ngFor="let course of courses" [value]="course.id">
+                                {{ course.title }}
+                            </option>
+                        </select>
+                        <div *ngIf="f['courseId'].touched && f['courseId'].invalid"
+                             class="text-danger mt-1">
+                            <div *ngIf="f['courseId'].errors?.['required']">
+                                {{ "Course is required!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Learner Name" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <select class="form-control form-select"
+                                formControlName="learnerId">
+                            <option [ngValue]="null" disabled selected>
+                                Select Learner
+                            </option>
+                            <option *ngFor="let learner of learners" [value]="learner.id">
+                                {{ learner.name }}
+                            </option>
+                        </select>
+                        <div *ngIf="f['learnerId'].touched && f['learnerId'].invalid"
+                             class="text-danger mt-1">
+                            <div *ngIf="f['learnerId'].errors?.['required']">
+                                {{ "Learner is required!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Completion Percentage" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <select class="form-control form-select"
+                                formControlName="completionPercentage">
+                            <option [value]="0">0%</option>
+                            <option [value]="25">25%</option>
+                            <option [value]="50">50%</option>
+                            <option [value]="75">75%</option>
+                            <option [value]="100">100%</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Is Completed" | localize }}
+                    </label>
+                    <div class="col-md-9">
+                        <select class="form-control form-select"
+                                formControlName="isCompleted">
+                            <option [ngValue]="false">False</option>
+                            <option [ngValue]="true">True</option>
+                        </select>
+                    </div>
+                </div>
+
+            </tab>
+        </tabset>
+    </div>
+
+    <abp-modal-footer [cancelDisabled]="false"
+                      [saveDisabled]="enrollmentForm.invalid"
+                      (onCancelClick)="Reset()">
+    </abp-modal-footer>
+</form>

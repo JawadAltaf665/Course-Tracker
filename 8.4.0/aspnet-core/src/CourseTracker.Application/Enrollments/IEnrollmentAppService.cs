@@ -17,5 +17,6 @@ namespace CourseTracker.Enrollments
         Task DeleteEnrollmentAsync(int id);
         Task<List<EnrollmentDTO>> GetEnrollmentsByLearnerIdAsync(int learnerId);
         Task<List<EnrollmentDTO>> GetEnrollmentsByCourseIdAsync(int courseId);
+        Task<List<EnrollmentDTO>> GetEnrollmentsByKeyword(string keyword);
     }
 }

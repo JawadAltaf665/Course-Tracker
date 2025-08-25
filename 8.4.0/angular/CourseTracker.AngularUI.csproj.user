@@ -5,6 +5,12 @@
     <None Update="src\shared\Dtos\courseDto.ts">
       <SubType>Code</SubType>
     </None>
+    <None Update="src\shared\Dtos\enrollmentDto.ts">
+      <SubType>Code</SubType>
+    </None>
+    <None Update="src\shared\Dtos\learnerDto.ts">
+      <SubType>Code</SubType>
+    </None>
     <None Update="src\shared\Dtos\moduleDto.ts">
       <SubType>Code</SubType>
     </None>

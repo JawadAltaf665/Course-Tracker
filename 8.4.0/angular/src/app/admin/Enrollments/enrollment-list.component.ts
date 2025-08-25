@@ -1,139 +1,111 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { courseDto } from '../../../shared/Dtos/courseDto';
+import { enrollmentDto } from '../../../shared/Dtos/enrollmentDto';
+import { learnerDto } from '../../../shared/Dtos/learnerDto';
+import { CreateEnrollmentComponent } from './create-enrollment/create-enrollment.component';
+import { EditEnrollmentComponent } from './edit-enrollment/edit-enrollment.component';
 
 @Component({
-  selector: 'app-enrollment-list',
-  templateUrl: './enrollment-list.component.html',
-//  styleUrls: ['./enrollment-list.component.css']
+    selector: 'app-enrollment-list',
+    templateUrl: './enrollment-list.component.html',
 })
 export class EnrollmentListComponent implements OnInit {
     public apiUrl = 'https://localhost:44311/api/services/app/Enrollment';
     public learnerApiUrl = 'https://localhost:44311/api/services/app/Learner';
     public courseApiUrl = 'https://localhost:44311/api/services/app/Course';
-    public enrollmentForm: FormGroup;
-    public enrollments: any[] = [];
-    public learners: any[] = [];
-    public courses: any[] = [];
+
+    enrollments: enrollmentDto[] = [];
+    learners: learnerDto[] = [];
+    courses: courseDto[] = [];
+    currentPagedEnrollments: enrollmentDto[] = [];
+
+    searchKeyword = '';
+    pageNumber = 1;
+    pageSize = 5;
+    totalItems = 0;
 
     constructor(
-        private fb: FormBuilder,
-        private http: HttpClient
+        private http: HttpClient,
+        public bsModalRef: BsModalRef,
+        private modalService: BsModalService
     ) { }
 
     ngOnInit(): void {
-        this.enrollmentForm = this.fb.group({
-            id: 0,
-            learnerId: [null, [Validators.required]],
-            courseId: [null, [Validators.required]],
-            completionPercentage: [0],
-            isCompleted: [false],
-        })
         this.loadEnrollmentList();
     }
 
     public loadEnrollmentList() {
-        debugger;
-        this.http.get<any[]>(`${this.apiUrl}/GetAllEnrollments`)
-            .subscribe({
-                next: (response: any) => {
-                    this.enrollments = response.result;
-                    console.warn('Enrollments loaded successfully:', this.enrollments);
+        this.http.get<any>(`${this.apiUrl}/GetAllEnrollments`).subscribe({
+            next: (response) => {
+                this.enrollments = response.result || [];
+                this.totalItems = this.enrollments.length;
 
-                    this.http.get<any[]>(`${this.learnerApiUrl}/GetAllLearners`)
-                        .subscribe({
-                            next: (learnerResponse: any) => {
-                                this.learners = learnerResponse.result;
-                                console.warn('Learners loaded successfully:', this.learners);
-                            },
-                            error: (err: any) => {
-                                console.error('Error loading learners!', err);
-                            }
-                        })
+                this.http.get<any>(`${this.learnerApiUrl}/GetAllLearners`).subscribe({
+                    next: (res) => this.learners = res.result || [],
+                    error: (err) => console.error('Error loading learners!', err)
+                });
 
-                    this.http.get<any[]>(`${this.courseApiUrl}/GetAllCourses`)
-                        .subscribe({
-                            next: (courseResponse: any) => {
-                                this.courses = courseResponse.result;
-                                console.warn('Courses loaded successfully:', this.courses);
-                            },
-                            error: (err: any) => {
-                                console.error('Error loading courses!', err);
-                            }
-                        })
-                },
-                error: (error: any) => {
-                    console.error('There was an error loading enrollments!', error);
-                }
-            })
+                this.http.get<any>(`${this.courseApiUrl}/GetAllCourses`).subscribe({
+                    next: (res) => this.courses = res.result || [],
+                    error: (err) => console.error('Error loading courses!', err)
+                });
+            },
+            error: (error) => console.error('Error loading enrollments!', error)
+        });
     }
 
-    Save() {
-        debugger;
-        if( this.enrollmentForm.invalid) {
+    public openCreateEnrollmentDialog() {
+        const modalRef = this.modalService.show(CreateEnrollmentComponent);
+        modalRef.content.onSave?.subscribe(() => this.loadEnrollmentList());
+    }
+
+    public EditEnrollment(enrollment: enrollmentDto) {
+        const initialState = { enrollment };
+        const modalRef = this.modalService.show(EditEnrollmentComponent, { initialState });
+        modalRef.content.onSave?.subscribe(() => this.loadEnrollmentList());
+    }
+
+    public DeleteEnrollment(enrollment: enrollmentDto): void {
+        abp.message.confirm(
+            'Are you sure you want to delete enrollment of"' + enrollment.learnerName + " in " + enrollment.courseTitle +'"?',
+            'Delete Confirmation'
+        ).then((result: boolean) => {
+            if (result) {
+                this.http.delete(`${this.apiUrl}/DeleteEnrollment?id=${enrollment.id}`).subscribe({
+                    next: () => {
+                        abp.notify.success('Enrollment deleted successfully!');
+                        this.loadEnrollmentList();
+                    },
+                    error: (error) => {
+                        abp.notify.error('Error deleting enrollment!');
+                        console.error('Error deleting enrollment!', error);
+                    }
+                });
+            }
+        });
+    }
+
+
+    public onSearch(keyword: string) {
+        if (!keyword || keyword.trim() === '') {
+            this.loadEnrollmentList();
             return;
         }
 
-        var formData = this.enrollmentForm.value;
-        console.log(formData);
-
-        if(formData.id == 0) {
-            this.http.post(`${this.apiUrl}/CreateEnrollment`, formData)
-                .subscribe({
-                    next: (response: any) => {
-                        console.log('Enrollment created successfully!', response);
-                        this.enrollmentForm.reset();
-                        this.loadEnrollmentList();
-                    },
-                    error: (error: any) => {
-                        console.error('There was an error creating the enrollment!', error);
-                    }
-                })
-        } else {
-            this.http.put(`${this.apiUrl}/UpdateEnrollment`, formData)
-                .subscribe({
-                    next: (response: any) => {
-                        console.log('Enrollment updated successfully!', response);
-                        this.enrollmentForm.reset();
-                        this.loadEnrollmentList();
-                    },
-                    error: (error: any) => {
-                        console.error('There was an error updating the enrollment!', error);
-                    }
-                })
-        }
+        this.http.get<any>(`${this.apiUrl}/GetEnrollmentsByKeyword?keyword=${keyword}`).subscribe({
+            next: (response) => {
+                this.enrollments = response.result || [];
+                this.totalItems = this.enrollments.length;
+            },
+            error: (error) => console.error('Error searching enrollments!', error)
+        });
     }
 
-    Reset() {
-        this.enrollmentForm.reset();
-    }
-
-    EditEnrollment(enrollment: any) {
-        debugger;
-        this.enrollmentForm.patchValue({
-            id: enrollment.id,
-            learnerName: enrollment.learnerName,
-            courseTitle: enrollment.courseTitle,
-            learnerId: enrollment.learnerId,
-            courseId: enrollment.courseId,
-            completionPercentage: enrollment.completionPercentage,
-            isCompleted: enrollment.isCompleted
-        })
-    }
-
-    DeleteEnrollment(enrollment: any) {
-        debugger;
-        if (confirm(`Are you sure you want to delete the enrollment for ${enrollment.learnerName} in ${enrollment.courseName}?`)) {
-            this.http.delete(`${this.apiUrl}/DeleteEnrollment?id=${enrollment.id}`)
-                .subscribe({
-                    next: (response: any) => {
-                        console.log('Enrollment deleted successfully!', response);
-                        this.loadEnrollmentList();
-                    },
-                    error: (error: any) => {
-                        console.error('There was an error deleting the enrollment!', error);
-                    }
-                })
-        }
+    public refresh() {
+        this.searchKeyword = '';
+        this.pageNumber = 1;
+        this.loadEnrollmentList();
     }
 }

@@ -1,0 +1,84 @@
+<form class="form-horizontal"
+      autocomplete="off"
+      [formGroup]="moduleForm"
+      (ngSubmit)="saveModule()">
+    <abp-modal-header [title]="'Edit Module' | localize"
+                      (onCloseClick)="bsModalRef.hide()">
+    </abp-modal-header>
+
+    <div class="modal-body">
+        <tabset>
+            <tab [heading]="'Details' | localize" class="pt-3 px-2">
+
+                <div class="form-group row">
+                    <input type="hidden" formControlName="id" />
+
+                    <label class="col-md-3 col-form-label">
+                        {{ "Module Title" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter module title"
+                               formControlName="title" />
+
+                        <div class="text-danger mt-1"
+                             *ngIf="f['title'].touched && f['title'].invalid">
+                            <div *ngIf="f['title'].errors?.['required']">
+                                {{ "Title is required!" | localize }}
+                            </div>
+                            <div *ngIf="f['title'].errors?.['minlength']">
+                                {{ "Title must be at least 3 characters long!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row mb-0">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Description" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Enter description"
+                               formControlName="description" />
+                    </div>
+                </div>
+
+                <div class="form-group row mt-3">
+                    <label class="col-md-3 col-form-label">
+                        {{ "Course" | localize }}
+                        <span class="text-danger">*</span>
+                    </label>
+                    <div class="col-md-9">
+                        <select class="form-control"
+                                formControlName="courseId">
+                            <option [ngValue]="null" disabled selected style="color: #6c757d;">
+                                Select Course
+                            </option>
+                            <option *ngFor="let course of courses" [ngValue]="course.id">
+                                {{ course.title }}
+                            </option>
+                        </select>
+
+                        <div class="text-danger mt-1"
+                             *ngIf="f['courseId'].touched && f['courseId'].invalid">
+                            <div *ngIf="f['courseId'].errors?.['required']">
+                                {{ "Course is required!" | localize }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </tab>
+        </tabset>
+    </div>
+
+    <abp-modal-footer [cancelDisabled]="false"
+                      [saveDisabled]="moduleForm.invalid"
+                      (onCancelClick)="Reset()">
+    </abp-modal-footer>
+</form>

@@ -3,6 +3,7 @@ using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper;
+using CourseTracker.Courses.Dtos;
 using CourseTracker.Entities;
 using CourseTracker.Modules.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ namespace CourseTracker.Modules
             await _moduleRepository.InsertAsync(module);
         }
 
+
         [AbpAuthorize(ModulePermissions.Modules_Delete)]
         public async Task DeleteModuleAsync(int id)
         {
@@ -59,6 +61,10 @@ namespace CourseTracker.Modules
             var modules = await _moduleRepository
                 .GetAllIncluding(m => m.Course)
                 .ToListAsync();
+
+            if (!modules.Any()) {
+                throw new UserFriendlyException("No modules found.");
+            }
 
             return _mapper.Map<List<ModuleDTO>>(modules);
 
@@ -110,8 +116,27 @@ namespace CourseTracker.Modules
 
         }
 
-           
+        public async Task<List<ModuleDTO>> GetModulesByKeyword(string keyword)
+        {
+            var module = await _moduleRepository.GetAll()
+                .Where(m => m.Title.Contains(keyword) || m.Description.Contains(keyword))
+                .Select(m => new ModuleDTO
+                {
+                    Title = m.Title,
+                    Description = m.Description,
+                    Id = m.Id,
+                    CourseTitle = m.Course.Title,
+                }).ToListAsync();
 
-            
+            if (!module.Any())
+            {
+                throw new UserFriendlyException($"No courses found with keyword '{keyword}'.");
+            }
+
+            return _mapper.Map<List<ModuleDTO>>(module);
+
+        }
+
+
     }
 }

@@ -1,131 +1,109 @@
-<div class="container mt-4">
-    <div class="card mb-4">
-        <div class="card-header bg-primary btn-sm d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Create New Enrollment</h5>
-        </div>
-        <div class="card-body">
-            <form [formGroup]="enrollmentForm">
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label">
-                            {{ "Course Title" | localize }}
-                        </label>
-                        <select class="form-control
-                            form-select-lg mb-3"
-                                formControlName="courseId">
-                            <option [ngValue]="null" disabled selected style="color: #6c757d;">Select Course</option>
-                            <option *ngFor="let course of courses" [value]="course.id">
-                                {{ course.title }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">
-                            {{ "Learner Name" | localize }}
-                        </label>
-                        <select class="form-control form-select-lg mb-3"
-                                formControlName="learnerId">
-                            <option [ngValue]="null" disabled selected style="color: #6c757d;">Select Learner</option>
-                            <option *ngFor="let learner of learners" [value]="learner.id">
-                                {{ learner.name }}
-                            </option>
-                        </select>
-                    </div>
+<div [@routerTransition]>
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6">
+                    <h1>Enrollments</h1>
                 </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label">
-                            {{ "Completion Percentage" | localize }}
-                        </label>
-                        <select class="form-control form-select-lg mb-3"
-                                formControlName="completionPercentage">
-                            <option [ngValue]="" disabled selected style="color: #6c757d;">0</option>
-                            <option [value]="25">25%</option>
-                            <option [value]="50">50%</option>
-                            <option [value]="75">75%</option>
-                            <option [value]="100">100%</option>
-
-                        </select>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label">
-                            {{ "IsCompleted" | localize }}
-                        </label>
-
-                        <select class="form-control form-select-lg mb-3"
-                                formControlName="isCompleted">
-                                <option [ngValue]="false">False</option>
-                                <option [ngValue]="true">True</option>
-                        </select>
-                    </div>
-
+                <div class="col-6 text-right">
+                    <a href="javascript:;" class="btn bg-blue" (click)="openCreateEnrollmentDialog()">
+                        <i class="fa fa-plus-square"></i>
+                        Create
+                    </a>
                 </div>
-
-
-              <div class="d-flex justify-content-end" style="display:flex; gap:10px;">
-                <button type="button"
-                    class="btn btn-sm btn-secondary"
-                    (click)="Reset()">
-                   {{ "Reset" | localize }}
-                </button>
-
-                <button type="button"
-                    class="btn btn-sm btn-primary"
-                    (click)="Save()"
-                    [disabled]="enrollmentForm.invalid">
-                    {{ "Save" | localize }}
-                </button>
-              </div>
-            </form>
+            </div>
         </div>
+    </section>
 
-      <div class="card mb-4">
-        <div class="card-header bg-primary btn-sm d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Enrollments</h5>
-        </div>
+    <section class="content px-2">
+        <div class="container-fluid">
+            <div class="card">
 
-        <div class="card-body">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>Enrollment ID</th>
-                        <th>Learner Name</th>
-                        <th>Course Title</th>
-                        <th>Completion Percentage</th>
-                        <th>IsCompleted</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let enrollment of enrollments">
-                        <td>{{ enrollment.id }}</td>
-                        <td>{{ enrollment.learnerName }}</td>
-                        <td>{{ enrollment.courseTitle }}</td>
-                        <td>{{ enrollment.completionPercentage}}</td>
-                        <td>
-                            <span [ngClass]="enrollment.isCompleted ? 'text-success' : 'text-danger'">
-                                {{ enrollment.isCompleted ? 'true' : 'false' }}
-                            </span>
-                        </td>
-                        <td>
-                            <div style="display:flex; gap:8px;">
-                                <button type="button" class="btn btn-sm btn-secondary me-2" (click)="EditEnrollment(enrollment)">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-
-                                <button class="btn btn-primary btn-sm" (click)="DeleteEnrollment(enrollment)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                <!-- Search -->
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">&emsp;</div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <button type="button" class="btn bg-blue" (click)="onSearch(searchKeyword)">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                                <input type="text"
+                                       class="form-control"
+                                       [(ngModel)]="searchKeyword"
+                                       placeholder="Search Enrollments..."
+                                       (keyup.enter)="onSearch(searchKeyword)" />
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Table -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Learner</th>
+                                    <th>Course</th>
+                                    <th>Completion %</th>
+                                    <th>Completed</th>
+                                    <th style="width: 200px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="enrollments.length > 0; else noData">
+                                <tr *ngFor="let enrollment of enrollments | paginate: { itemsPerPage: pageSize, currentPage: pageNumber }">
+                                    <td>{{ enrollment.learnerName }}</td>
+                                    <td>{{ enrollment.courseTitle }}</td>
+                                    <td>{{ enrollment.completionPercentage }}%</td>
+                                    <td>
+                                        <span [ngClass]="enrollment.isCompleted ? 'text-success' : 'text-danger'">
+                                            {{ enrollment.isCompleted ? 'Yes' : 'No' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm bg-secondary"
+                                                (click)="EditEnrollment(enrollment)">
+                                            <i class="fas fa-pencil-alt"></i> Edit
+                                        </button>
+                                        <button type="button" class="btn btn-sm bg-danger mx-2"
+                                                (click)="DeleteEnrollment(enrollment)">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ng-template #noData>
+                            <p class="text-center m-3">No enrollments found!</p>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <div class="card-footer table-card-footer bg-light border-top">
+                    <div class="row">
+                        <div class="col-sm-4 col-12 text-sm-left text-center">
+                            <button class="btn btn-secondary" (click)="refresh()">
+                                <i class="fas fa-redo-alt"></i>
+                            </button>
+                        </div>
+                        <div class="col-sm-4 col-12 text-center">
+                            <p class="mb-0 my-2">Total Records: {{ enrollments.length }}</p>
+                        </div>
+                        <div class="col-sm-4 col-12">
+                            <div class="float-sm-right m-auto">
+                                <pagination-controls (pageChange)="pageNumber = $event"
+                                                     previousLabel="Prev"
+                                                     nextLabel="Next">
+                                </pagination-controls>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-      </div>
-    </div>
+    </section>
 </div>
