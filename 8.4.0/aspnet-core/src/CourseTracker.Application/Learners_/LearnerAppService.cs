@@ -1,8 +1,10 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper;
+using CourseTracker.Enrollments.Dtos;
 using CourseTracker.Entities;
 using CourseTracker.Learners_.Dtos;
 using CourseTracker.Modules.Dtos;
@@ -123,5 +125,29 @@ namespace CourseTracker.Learners_
             return _mapper.Map<List<LearnerDto>>(learner);
 
         }
+
+        public async Task<PagedResultDto<LearnerDto>> GetPagedLearnersAsync(GetLearnerListInputDTO input)
+        {
+            var query = _learnerRepo.GetAll();
+
+            if (!string.IsNullOrWhiteSpace(input.Keyword))
+            {
+                query = query.Where(l => l.Name.Contains(input.Keyword)
+                                      || l.Email.Contains(input.Keyword));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var learners = await query
+                .OrderBy(l => l.Name)
+                .Skip((input.PageNumber - 1) * input.PageSize)
+                .Take(input.PageSize)
+                .ToListAsync();
+
+            var learnerDtos = _mapper.Map<List<LearnerDto>>(learners);
+
+            return new PagedResultDto<LearnerDto>(totalCount, learnerDtos);
+        }
+
     }
 }

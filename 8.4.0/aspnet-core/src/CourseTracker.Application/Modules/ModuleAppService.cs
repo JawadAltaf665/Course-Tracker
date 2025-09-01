@@ -1,9 +1,11 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.UI;
 using AutoMapper;
 using CourseTracker.Courses.Dtos;
+using CourseTracker.Enrollments.Dtos;
 using CourseTracker.Entities;
 using CourseTracker.Modules.Dtos;
 using Microsoft.EntityFrameworkCore;
@@ -135,6 +137,29 @@ namespace CourseTracker.Modules
 
             return _mapper.Map<List<ModuleDTO>>(module);
 
+        }
+        public async Task<PagedResultDto<ModuleDTO>> GetPagedModulesAsync(GetModuleListInputDTO input)
+        {
+            var query = _moduleRepository
+                .GetAllIncluding(m => m.Course); 
+
+            if (!string.IsNullOrWhiteSpace(input.Keyword))
+            {
+                query = query.Where(m => m.Title.Contains(input.Keyword)
+                                      || m.Description.Contains(input.Keyword)
+                                      || m.Course.Title.Contains(input.Keyword));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var modules = await query
+                .OrderBy(m => m.Title)
+                .Skip((input.PageNumber - 1) * input.PageSize)
+                .Take(input.PageSize)
+                .ToListAsync();
+
+            var moduleDtos = _mapper.Map<List<ModuleDTO>>(modules);
+            return new PagedResultDto<ModuleDTO>(totalCount, moduleDtos);
         }
 
 

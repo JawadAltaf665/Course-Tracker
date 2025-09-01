@@ -50,6 +50,8 @@ import { CreateLearnerComponent } from './admin/Learners/create-learner/create-l
 import { EditLearnerComponent } from './admin/Learners/edit-learner/edit-learner.component';
 import { CreateEnrollmentComponent } from './admin/Enrollments/create-enrollment/create-enrollment.component';
 import { EditEnrollmentComponent } from './admin/Enrollments/edit-enrollment/edit-enrollment.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+
 
 
 @NgModule({
@@ -108,6 +110,7 @@ import { EditEnrollmentComponent } from './admin/Enrollments/edit-enrollment/edi
         ServiceProxyModule,
         SharedModule,
         NgxPaginationModule,
+        PaginationModule.forRoot()
 
         
     ],

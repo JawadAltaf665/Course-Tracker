@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Domain.Uow;
@@ -145,6 +146,25 @@ namespace CourseTracker.AppService
 
             return _mapper.Map<List<CourseDTO>>(course);
             
+        }
+
+        public async Task<PagedResultDto<CourseDTO>> GetPagedCoursesAsync(GetCourseListInputDTO input)
+        {
+            var query = _courseRepo.GetAll();
+            if (!string.IsNullOrWhiteSpace(input.Keyword))
+            {
+                query = query.Where(c => c.Title.Contains(input.Keyword) || c.Description.Contains(input.Keyword));
+            }
+
+            var totalCount = await query.CountAsync();
+            var courses = await query
+                .OrderBy(c => c.Title)
+                .Skip((input.PageNumber - 1) * input.PageSize)
+                .Take(input.PageSize)
+                .ToListAsync();
+
+            var courseDtos = _mapper.Map<List<CourseDTO>>(courses);
+            return new PagedResultDto<CourseDTO>(totalCount, courseDtos);
         }
     }
 }

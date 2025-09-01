@@ -1,10 +1,12 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using Abp.Authorization;
 using Abp.BackgroundJobs;
 using Abp.Domain.Repositories;
 using Abp.Timing;
 using Abp.UI;
 using AutoMapper;
+using CourseTracker.Courses.Dtos;
 using CourseTracker.Enrollments.BackgroundJobServices;
 using CourseTracker.Enrollments.Dtos;
 using CourseTracker.Entities;
@@ -221,6 +223,32 @@ namespace CourseTracker.Enrollments
             return _mapper.Map<List<EnrollmentDTO>>(enrollment);
 
         }
+
+        public async Task<PagedResultDto<EnrollmentDTO>> GetPagedEnrollmentsAsync(GetEnrollmentListInputDTO input)
+        {
+            var query = _enrollmentRepository
+                .GetAllIncluding(e => e.Course, e => e.Learner);
+
+            if (!string.IsNullOrWhiteSpace(input.Keyword))
+            {
+                query = query.Where(e => e.Course.Title.Contains(input.Keyword)
+                                      || e.Course.Description.Contains(input.Keyword)
+                                      || e.Learner.Name.Contains(input.Keyword));
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var enrollments = await query
+                .OrderBy(e => e.Course.Title) // Or you can order by enrollment date if you have that field
+                .Skip((input.PageNumber - 1) * input.PageSize)
+                .Take(input.PageSize)
+                .ToListAsync();
+
+            var enrollmentDtos = _mapper.Map<List<EnrollmentDTO>>(enrollments);
+
+            return new PagedResultDto<EnrollmentDTO>(totalCount, enrollmentDtos);
+        }
+
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using CourseTracker.Enrollments.Dtos;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,7 @@ namespace CourseTracker.Enrollments
         Task<List<EnrollmentDTO>> GetEnrollmentsByLearnerIdAsync(int learnerId);
         Task<List<EnrollmentDTO>> GetEnrollmentsByCourseIdAsync(int courseId);
         Task<List<EnrollmentDTO>> GetEnrollmentsByKeyword(string keyword);
+        Task<PagedResultDto<EnrollmentDTO>> GetPagedEnrollmentsAsync(GetEnrollmentListInputDTO input);
+
     }
 }

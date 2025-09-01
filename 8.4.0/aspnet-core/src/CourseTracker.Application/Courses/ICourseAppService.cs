@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using CourseTracker.Courses.Dtos;
 using CourseTracker.Modules.Dtos;
 using System;
@@ -18,5 +19,7 @@ namespace CourseTracker.Course
         Task DeleteCourseAsync(int id);
         Task<List<CourseDTO>> GetCoursesByKeyword(string keyword);
         Task CreateCourseWIthModuleDTO(CreateCourseWithModulesRequest input);
+        Task<PagedResultDto<CourseDTO>> GetPagedCoursesAsync(GetCourseListInputDTO input);
+
     }
 }

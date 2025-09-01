@@ -56,7 +56,7 @@
                             </thead>
 
                             <tbody *ngIf="courses.length > 0; else noData">
-                                <tr *ngFor="let course of courses | paginate: { itemsPerPage: pageSize, currentPage: pageNumber }">
+                                <tr *ngFor="let course of courses">
                                     <td>{{ course.title }}</td>
                                     <td>{{ course.description }}</td>
                                     <td>
@@ -100,10 +100,17 @@
                         </div>
                         <div class="col-sm-4 col-12">
                             <div class="float-sm-right m-auto">
-                                <pagination-controls (pageChange)="pageNumber = $event"
-                                                     previousLabel="Prev"
-                                                     nextLabel="Next">
-                                </pagination-controls>
+                                <pagination [totalItems]="totalItems"
+                                            [(ngModel)]="currentPage"
+                                            [itemsPerPage]="pageSize"
+                                            [maxSize]="5"
+                                            [rotate]="false"
+                                            [boundaryLinks]="true"
+                                            [directionLinks]="true"
+                                            (pageChanged)="onPageChanged($event)"
+                                            previousText="Prev"
+                                            nextText="Next">
+                                </pagination>
                             </div>
                         </div>
                     </div>

@@ -9,7 +9,7 @@ export class SignalRAspNetCoreHelper {
             autoConnect: true,
             connect: undefined,
             hubs: undefined,
-            qs: AppConsts.authorization.encryptedAuthTokenName + '=' + encodeURIComponent(encryptedAuthToken),
+            qs: '',
             remoteServiceBaseUrl: AppConsts.remoteServiceBaseUrl,
             startConnection: undefined,
             url: '/signalr'

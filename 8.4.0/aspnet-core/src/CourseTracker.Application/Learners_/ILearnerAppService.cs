@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using CourseTracker.Learners_.Dtos;
 using CourseTracker.Modules.Dtos;
 using System;
@@ -17,5 +18,6 @@ namespace CourseTracker.Learners_
         Task UpdateLearnerAsync(CreateUpdateLearnerDTO input);
         Task DeleteLearnerAsync(int id);
         Task<List<LearnerDto>> GetLearnersByKeyword(string keyword);
+        Task<PagedResultDto<LearnerDto>> GetPagedLearnersAsync(GetLearnerListInputDTO input);
     }
 }
